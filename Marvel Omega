@@ -1,0 +1,84 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local Lighting = game:GetService("Lighting")
+local cam = workspace.CurrentCamera
+
+local Window = Rayfield:CreateWindow({
+	Name = "Marvel Omega",
+	Icon = 0,
+	LoadingTitle = "Extremes Hub",
+	LoadingSubtitle = "By Iloveroblox394893",
+	ShowText = "Extremes Hub",
+	Theme = "Default",
+	ToggleUIKeybind = "K",
+	DisableRayfieldPrompts = false,
+	DisableBuildWarnings = false,
+	ConfigurationSaving = {
+		Enabled = true,
+		FolderName = nil,
+		FileName = "Extremes Hub"
+	},
+	Discord = {
+		Enabled = false,
+		Invite = "noinvitelink",
+		RememberJoins = true
+	},
+	KeySystem = true,
+	KeySettings = {
+		Title = "Marvel Omega",
+		Subtitle = "Marvel Omega Key",
+		Note = "",
+		FileName = "Extremes Hub Key",
+		SaveKey = true,
+		GrabKeyFromSite = true,
+		Key = {"https://pastebin.com/raw/zT3Bsy4u"}
+	}
+})
+
+local Tab1 = Window:CreateTab("Combat", nil)
+local Tab2= Window:CreateTab("Automation", nil)
+local Tab3 = Window:CreateTab("Spawning", nil)
+local Tab4 = Window:CreateTab("Teleports", nil)
+
+local selectedTarget = nil
+
+local Dropdown = Tab4:CreateDropdown({
+	Name = "Target",
+	Options = {},
+	CurrentOption = {},
+	MultipleOptions = false,
+	Flag = "Dropdown1",
+	Callback = function(Options)
+		selectedTarget = Options[1]
+	end,
+})
+
+local function UpdateList()
+	local list = {}
+	for _, p in ipairs(Players:GetPlayers()) do
+		if p ~= LocalPlayer then
+			table.insert(list, p.Name)
+		end
+	end
+	Dropdown:Refresh(list, true)
+end
+
+UpdateList()
+
+Players.PlayerAdded:Connect(UpdateList)
+Players.PlayerRemoving:Connect(UpdateList)
+
+local Button = Tab4:CreateButton({
+	Name = "Teleport",
+	Callback = function()
+		if selectedTarget then
+			local target = Players:FindFirstChild(selectedTarget)
+			if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+				LocalPlayer.Character.HumanoidRootPart.CFrame = target.Character.HumanoidRootPart.CFrame
+			end
+		end
+	end,
+})
